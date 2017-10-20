@@ -1,0 +1,82 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="Content-Security-Policy" content="default-src * data:; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
+  <link href="https://fonts.googleapis.com/earlyaccess/notosansjapanese.css" rel="stylesheet" />
+  <link rel="stylesheet" href="../components/loader.css">
+  <link rel="stylesheet" href="../common/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../common/css/setting.css">
+  <link rel="stylesheet" href="../common/css/modal.alert.css">
+  <link rel="stylesheet" href="../common/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../common/css/bootstrap.override.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../common/js/jquery-3.2.1.min.js"></script>
+  <script src="../common/js/bootstrap.min.js"></script>
+  <script src="../components/loader.js"></script>
+  <script src="../js/constants.js"></script>
+  <script src="../js/tagRegist.js"></script>
+  
+  <style type="text/css">
+    .jumbotron {
+      background-image: url("../sample.jpg");
+      background-size: cover;
+      background-position: center 100%;
+    }
+　</style>
+　
+</head>
+<body>
+  <div id="contents">
+    <div class="jumbotron">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-5">
+            <br><br><br><br><br><br><br>
+            <p class="input-group">
+              <span class="input-group-addon">#</span>
+              <input type="text" id="tagInput" class="form-control" placeholder="Select tags...">
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-8">
+          <div class="list-group" id="tagGroup">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-8 text-center">
+          <input type="button" id="save" class="btn btn-primary" value="登録">
+        </div>
+      </div>
+    </div>
+  </div>
+  <br>
+  
+  <div id="error-modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">エラー</h4>
+        </div>
+        <div class="modal-body">
+          <p>タグは10件までしか選択できません。</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,33 @@
+@charset "UTF-8";
+
+#modal-alert .modal-body {
+	text-align: center;
+	color: #a94442;
+	font-size: 16px;
+}
+@media screen and (max-width:768px) {
+	#modal-alert .modal-body {
+		font-size: 14px;
+	}
+}
+@media screen and (max-width:568px) {
+	#modal-alert .modal-body {
+		text-align: left;
+	}
+}
+
+#modal-info .modal-body {
+	text-align: center;
+	color: #31708f;
+	font-size: 16px;
+}
+@media screen and (max-width:768px) {
+	#modal-info .modal-body {
+		font-size: 14px;
+	}
+}
+@media screen and (max-width:568px) {
+	#modal-info .modal-body {
+		text-align: left;
+	}
+}
