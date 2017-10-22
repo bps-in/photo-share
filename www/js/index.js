@@ -116,6 +116,7 @@ function getPicList(userId, page) {
     if (data.result == '0') {
         var tagArray = [];
         for (var i=0;i < data.array.length; i++) {
+          var photoId = data.array[i].photoId;
           var imgSrc = "data:image/png;base64," + data.array[i].photoData;
           var tagIds =  data.array[i].tag1 + "-" +data.array[i].tag2
                       + "-" +data.array[i].tag3 + "-" +data.array[i].tag4
@@ -128,7 +129,7 @@ function getPicList(userId, page) {
           } else {
             imgTag = '<div class="col-xs-6 col-md-3">';
           }
-          imgTag += '<a class="thumbnail" href="javascript:void(0);" onClick="picTap(this);" data-pic="' + data.array[i].photoData + '" data-tagIds="' + tagIds + '" data-tagName="">';
+          imgTag += '<a class="thumbnail" href="javascript:void(0);" onClick="picTap(this);" data-photoId="' + photoId + '" data-pic="' + data.array[i].photoData + '" data-tagIds="' + tagIds + '" data-tagName="">';
           imgTag += '<img src="' + imgSrc + '" alt="" />';
           imgTag += '</a></div>';
           tagArray.push(imgTag);
@@ -154,11 +155,11 @@ function getPicList(userId, page) {
 }
 
 function picTap(e) {
-  var selectPic = {};
-  selectPic.pic = e.getAttribute("data-pic");
-  selectPic.tagName = e.getAttribute("data-tagName");
-  selectPic.tagIds = e.getAttribute("data-tagIds");
-  localStorage.setItem('selectPic', JSON.stringify(selectPic));
+  console.log(e.getAttribute("data-photoId"));
+  //TODO picture_binari以外も定数化したい
+  localStorage.setItem('selectPic', e.getAttribute("data-photoId"));
+  localStorage.setItem('tagNames', e.getAttribute("data-tagName"));
+  localStorage.setItem(PICTURE_BINARY, e.getAttribute("data-pic"));
   location.href="./page/picDetail.html";
 }
 
