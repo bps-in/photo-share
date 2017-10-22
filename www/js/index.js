@@ -155,7 +155,6 @@ function getPicList(userId, page) {
 }
 
 function picTap(e) {
-  console.log(e.getAttribute("data-photoId"));
   //TODO picture_binari以外も定数化したい
   localStorage.setItem('selectPic', e.getAttribute("data-photoId"));
   localStorage.setItem('tagNames', e.getAttribute("data-tagName"));
