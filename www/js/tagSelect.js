@@ -43,10 +43,10 @@ $(() => {
   // タグ一覧取得処理
   $.ajax({
     type: "POST",
-    url: "http://bpsinv.s1002.xrea.com/api/findTag.php",
+    url: API_DOMAIN + "findTag.php",
     timeout: 10000,
     cache: false,
-	data: {
+  data: {
       'userId': this.userId,
       'photoId': ''
     },
@@ -62,7 +62,7 @@ $(() => {
    //TODO API連携待ち 2017/10/6追記
    //  $.ajax({
    //    type: "POST",
-   //    url: "http://bpsinv.s1002.xrea.com/api/GetPhotoInfo.php",
+   //    url: API_DOMAIN + "GetPhotoInfo.php",
    //    timeout: 10000,
    //    cache: false,
    //    data: {

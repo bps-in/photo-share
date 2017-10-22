@@ -15,6 +15,10 @@ $(()=>{
   // 画像取得
   this.img = localStorage.getItem(PICTURE_BINARY);
   
+  $('.jumbotron').css({
+    backgroundImage: 'url("data:image/png;base64, ' + this.img + '")'
+  });
+  
   // タグ一覧取得成功時コールバック
   function getTagListSuccessCallBack(response) {
     return new Promise((resolve, reject)=>{
@@ -47,13 +51,13 @@ $(()=>{
   function errorCallBack(args) {
     var [jqXHR, textStatus, errorThrown] = args;
     console.error(JSON.stringify(jqXHR));
-	alert("サーバー内でエラーがあったか、サーバーから応答がありませんでした。");
+  alert("サーバー内でエラーがあったか、サーバーから応答がありませんでした。");
   }
   
   // 画面表示時タグ一覧取得処理
   $.ajax({
     type: "POST",
-    url: "http://bpsinv.s1002.xrea.com/api/findTag.php",
+    url: API_DOMAIN + "findTag.php",
     timeout: 10000,
     cache: false,
 	data: {
@@ -70,7 +74,7 @@ $(()=>{
   $('#save').on('click', ()=>{
     $.ajax({
       type: "POST",
-      url: "http://bpsinv.s1002.xrea.com/api/SavePhoto.php",
+      url: API_DOMAIN + "SavePhoto.php",
       timeout: 10000,
       cache: false,
       data: {
