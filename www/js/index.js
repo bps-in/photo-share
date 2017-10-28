@@ -14,6 +14,7 @@ function loginCheck() {
   var loginKey = localStorage.getItem(LOGIN_KEY);
   if (loginKey == null) {
     $('#picList').hide();
+    $('#searchIcon').hide();
     $('#login').show();
     $("#loading").fadeOut(3500);
   } else {
@@ -31,6 +32,7 @@ function loginCheck() {
         getPicList(loginKey).done(function(){
           $('#login').hide();
           $('#picList').show();
+          $('#searchIcon').show();
           $("#loading").fadeOut(3500);
           $("div.modal-body p").text(INDEX_001);
           $("#id-modal").modal();
@@ -45,6 +47,7 @@ function loginCheck() {
         // 検索失敗時
         localStorage.setItem(LOGIN_KEY, null);
         $('#picList').hide();
+        $('#searchIcon').hide();
         $('#login').show();
         $("#loading").fadeOut(3000);
       }
@@ -52,6 +55,7 @@ function loginCheck() {
       // 検索失敗時
       localStorage.setItem(LOGIN_KEY, null);
       $('#picList').hide();
+      $('#searchIcon').hide();
       $('#login').show();
       $("#loading").fadeOut(3000);
     });
@@ -76,6 +80,7 @@ function login() {
       getPicList(userId).done(function(){
         $('#login').hide();
         $('#picList').show();
+        $('#searchIcon').show();
         $("div.modal-body p").text(INDEX_001);
         $("#id-modal").modal();
       }).fail(function(){
@@ -118,18 +123,18 @@ function getPicList(userId, page) {
         for (var i=0;i < data.array.length; i++) {
           var photoId = data.array[i].photoId;
           var imgSrc = "data:image/png;base64," + data.array[i].photoData;
-          var tagIds =  data.array[i].tag1 + "-" +data.array[i].tag2
+          var tagNames =  data.array[i].tag1 + "-" +data.array[i].tag2
                       + "-" +data.array[i].tag3 + "-" +data.array[i].tag4
                       + "-" +data.array[i].tag5 + "-" +data.array[i].tag6
                       + "-" +data.array[i].tag7 + "-" +data.array[i].tag8
                       + "-" +data.array[i].tag9 + "-" +data.array[i].tag10;
           var imgTag = '';
           if (i == data.array.length - 1) {
-            imgTag = '<div class="col-xs-6 col-md-3" id="pageEnd">';
+            imgTag = '<div class="col-xs-6 col-md-3 pageEnd">';
           } else {
             imgTag = '<div class="col-xs-6 col-md-3">';
           }
-          imgTag += '<a class="thumbnail" href="javascript:void(0);" onClick="picTap(this);" data-photoId="' + photoId + '" data-pic="' + data.array[i].photoData + '" data-tagIds="' + tagIds + '" data-tagName="">';
+          imgTag += '<a class="thumbnail" href="javascript:void(0);" onClick="picTap(this);" data-photoId="' + photoId + '" data-pic="' + data.array[i].photoData + '" data-tagName="' + tagNames + '">';
           imgTag += '<img src="' + imgSrc + '" alt="" />';
           imgTag += '</a></div>';
           tagArray.push(imgTag);
@@ -137,6 +142,7 @@ function getPicList(userId, page) {
         $("div#picList div.row").append(tagArray.join(''));
         $('#login').hide();
         $('#picList').show();
+        $('#searchIcon').show();
         d.resolve();
     } else {
       // 検索失敗時
@@ -164,29 +170,33 @@ function picTap(e) {
 
 $(function(){
   localStorage.setItem('selectPic', null);
+  $('#searchIcon').hide();
   $('#picList').hide();
   $('#login').hide();
   loginCheck();
   // 引き金となる要素を設定
-  var triggerNode = $(".container-fluid .row #pageEnd");
+  var triggerNode = "div#picList div.row div.pageEnd";
   var ajaxLock = false;
   // 画面スクロール毎に判定を行う
   $(window).scroll(function(){
     // 引き金となる要素の位置を取得
-    var triggerNodePosition = $(triggerNode).offset().top - $(window).height();
-    console.log(triggerNodePosition);
-    // 現在のスクロール位置が引き金要素の位置より下にあれば‥
-    if ($(window).scrollTop() > triggerNodePosition) {
-      // 写真情報取得APIを実行
-      if (!ajaxLock) {
-        ajaxLock = true;
-        $("#loading").show();
-        getPicList(localStorage.getItem(LOGIN_KEY)).done(function(){
-          $("#loading").fadeOut(3000);
-          ajaxLock = false;
-        }).fail(function(){
-          // 検索失敗時
-        });
+    if ($(triggerNode).length) {
+      var triggerNodePosition = $(triggerNode).offset().top - $(window).height();
+      console.log(triggerNodePosition);
+      // 現在のスクロール位置が引き金要素の位置より下にあれば‥
+      if ($(window).scrollTop() > triggerNodePosition) {
+        // 写真情報取得APIを実行
+        if (!ajaxLock) {
+          ajaxLock = true;
+          $("#loading").show();
+          $(triggerNode).removeClass("pageEnd");
+          getPicList(localStorage.getItem(LOGIN_KEY)).done(function(){
+            $("#loading").fadeOut(3000);
+            ajaxLock = false;
+          }).fail(function(){
+            // 検索失敗時
+          });
+        }
       }
     }
   });
