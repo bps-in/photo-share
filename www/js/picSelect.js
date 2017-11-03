@@ -20,8 +20,8 @@ function snapPicture() {
     });
 
     // 閉じるボタン
-    $('#id-modal').off('click', '.modal-footer .btn-default');
-    $('#id-modal').on('click', '.modal-footer .btn-default', function() {
+    $('#id-modal').off('click', '.modal-footer .btn-default, .modal-header .close');
+    $('#id-modal').on('click', '.modal-footer .btn-default, .modal-header .close', function() {
       // タグ選択画面に遷移
       window.location.href = '../index.html';
       

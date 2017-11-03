@@ -15,8 +15,9 @@ function loginCheck() {
   if (loginKey == null) {
     $('#picList').hide();
     $('#searchIcon').hide();
+    $('#logoutIcon').hide();
     $('#login').show();
-    $("#loading").fadeOut(3500);
+    $("#loading").hide();
   } else {
     var reqParam = {id : loginKey};
     $.ajax({
@@ -33,7 +34,8 @@ function loginCheck() {
           $('#login').hide();
           $('#picList').show();
           $('#searchIcon').show();
-          $("#loading").fadeOut(3500);
+          $('#logoutIcon').show();
+          $("#loading").hide();
           $("div.modal-body p").text(INDEX_001);
           $("#id-modal").modal();
           
@@ -48,16 +50,18 @@ function loginCheck() {
         localStorage.setItem(LOGIN_KEY, null);
         $('#picList').hide();
         $('#searchIcon').hide();
+        $('#logoutIcon').hide();
         $('#login').show();
-        $("#loading").fadeOut(3000);
+        $("#loading").hide();
       }
     }).fail(function() {
       // 検索失敗時
       localStorage.setItem(LOGIN_KEY, null);
       $('#picList').hide();
       $('#searchIcon').hide();
+      $('#logoutIcon').hide();
       $('#login').show();
-      $("#loading").fadeOut(3000);
+      $("#loading").hide();
     });
   }
 }
@@ -81,12 +85,16 @@ function login() {
         $('#login').hide();
         $('#picList').show();
         $('#searchIcon').show();
+        $('#logoutIcon').show();
         $("div.modal-body p").text(INDEX_001);
+        $("div.modal-body p.error").text("");
         $("#id-modal").modal();
-      }).fail(function(){
+      }).fail(function(data){
         // 検索失敗時
+        console.log(data.statusText);
         localStorage.setItem(LOGIN_KEY, null);
         $("div.modal-body p").text(INDEX_002);
+        $("div.modal-body label.error").text("getPic:" + data.statusText);// テスト後削除
         $("#id-modal").modal();
       });
     } else {
@@ -97,8 +105,10 @@ function login() {
     }
   }).fail(function(data) {
     // 検索失敗時
+    console.log(data.statusText);
     localStorage.setItem(LOGIN_KEY, null);
     $("div.modal-body p").text(INDEX_002);
+    $("div.modal-body label.error").text("loginAPI:" + data.statusText);// テスト後削除
     $("#id-modal").modal();
   });
 }
@@ -114,7 +124,7 @@ function getPicList(userId, page) {
     url: API_DOMAIN + 'GetPhotoInfo.php',
     data: JSON.stringify(reqParam),
     contentType: 'application/JSON',
-    dataType : 'JSON',
+    dataType : 'json',
     scriptCharset: 'utf-8'
   }).done(function(data) {
     // 検索成功時
@@ -123,11 +133,40 @@ function getPicList(userId, page) {
         for (var i=0;i < data.array.length; i++) {
           var photoId = data.array[i].photoId;
           var imgSrc = "data:image/png;base64," + data.array[i].photoData;
-          var tagNames =  data.array[i].tag1 + "-" +data.array[i].tag2
-                      + "-" +data.array[i].tag3 + "-" +data.array[i].tag4
-                      + "-" +data.array[i].tag5 + "-" +data.array[i].tag6
-                      + "-" +data.array[i].tag7 + "-" +data.array[i].tag8
-                      + "-" +data.array[i].tag9 + "-" +data.array[i].tag10;
+          var tagNames = "";
+          if (data.array[i].tag1 != null) {
+            tagNames += "#" + data.array[i].tag1 + ", ";
+          }
+          if (data.array[i].tag2 != null) {
+            tagNames += "#" + data.array[i].tag2 + ", ";
+          }
+          if (data.array[i].tag3 != null) {
+            tagNames += "#" + data.array[i].tag3 + ", ";
+          }
+          if (data.array[i].tag4 != null) {
+            tagNames += "#" + data.array[i].tag4 + ", ";
+          }
+          if (data.array[i].tag5 != null) {
+            tagNames += "#" + data.array[i].tag5 + ", ";
+          }
+          if (data.array[i].tag6 != null) {
+            tagNames += "#" + data.array[i].tag6 + ", ";
+          }
+          if (data.array[i].tag7 != null) {
+            tagNames += "#" + data.array[i].tag7 + ", ";
+          }
+          if (data.array[i].tag8 != null) {
+            tagNames += "#" + data.array[i].tag8 + ", ";
+          }
+          if (data.array[i].tag9 != null) {
+            tagNames += "#" + data.array[i].tag9 + ", ";
+          }
+          if (data.array[i].tag10 != null) {
+            tagNames += "#" + data.array[i].tag10 + ", ";
+          }
+          if (tagNames.length > 2) {
+            tagNames = tagNames.slice(0, -2);
+          }
           var imgTag = '';
           if (i == data.array.length - 1) {
             imgTag = '<div class="col-xs-6 col-md-3 pageEnd">';
@@ -143,6 +182,7 @@ function getPicList(userId, page) {
         $('#login').hide();
         $('#picList').show();
         $('#searchIcon').show();
+        $('#logoutIcon').show();
         d.resolve();
     } else {
       // 検索失敗時
@@ -168,9 +208,21 @@ function picTap(e) {
   location.href="./page/picDetail.html";
 }
 
+function logout() {
+  //TODO アラートかモーダルだした方がいいかも？
+  // ログアウト処理実行、ログイン画面表示
+  localStorage.setItem('selectPic', null);
+  localStorage.setItem(LOGIN_KEY, null);
+  $('#searchIcon').hide();
+  $('#logoutIcon').hide();
+  $('#picList').hide();
+  $('#login').show();
+}
+
 $(function(){
   localStorage.setItem('selectPic', null);
   $('#searchIcon').hide();
+  $('#logoutIcon').hide();
   $('#picList').hide();
   $('#login').hide();
   loginCheck();
@@ -191,7 +243,7 @@ $(function(){
           $("#loading").show();
           $(triggerNode).removeClass("pageEnd");
           getPicList(localStorage.getItem(LOGIN_KEY)).done(function(){
-            $("#loading").fadeOut(3000);
+            $("#loading").hide();
             ajaxLock = false;
           }).fail(function(){
             // 検索失敗時

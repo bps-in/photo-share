@@ -2,8 +2,7 @@ var inputTags = [];
 userId = "";
 
 $(() => {
-  //TODO  localstrageからuserIdを取得する(key不明のためスタブ)
-  this.userId = "c983553fb64ae277301f5cd14cec4f40"; 
+  this.userId = localStorage.getItem(LOGIN_KEY);
   
   // タグ一覧取得成功時コールバック
   function getTagListSuccessCallBack(response) {
@@ -58,22 +57,22 @@ $(() => {
   
   // 検索処理
   $('#search').on('click', () => {
-      
-   //TODO API連携待ち 2017/10/6追記
-   //  $.ajax({
-   //    type: "POST",
-   //    url: API_DOMAIN + "GetPhotoInfo.php",
-   //    timeout: 10000,
-   //    cache: false,
-   //    data: {
-   //      'userId': this.userId,
-   //      'tag': inputTags
-   //    },
-	  // dataType: 'json'
-   //  }).then(
-   //    (response, textStatus, jqXHR) => {console.log(response)},
-   //    (...args) => {errorCallBack(args)}
-   //  ); 
+      // inputTags配列を文字列に変換して送信する
+      var tags = inputTags.join(',');
+     $.ajax({
+       type: "POST",
+       url: API_DOMAIN + "GetPhotoInfo.php",
+       timeout: 10000,
+       cache: false,
+      data: {
+        'userId': this.userId,
+        'tag': tags
+      },
+	  dataType: 'json'
+    }).then(
+      (response, textStatus, jqXHR) => {console.log(response)},
+      (...args) => {errorCallBack(args)}
+    ); 
   }); 
 });
 

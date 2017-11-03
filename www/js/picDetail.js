@@ -12,11 +12,7 @@ function createInitHtml() {
   var selectPicTag = localStorage.getItem('tagNames');
   var tagInfo = "";
   if (0 < selectPicTag.length) {
-    for (var i = 0; i < selectPicTag.length; i++) {
-      tagInfo += "#" + selectPicTag[i] + ", ";
-    }
-    tagInfo = tagInfo.slice(0, -2);
-    $('.text-info').html(tagInfo);
+    $('.text-info').html(selectPicTag);
   }
   //ヘッダー
   $('#editTagBtn').val(PICDETAIL_001);

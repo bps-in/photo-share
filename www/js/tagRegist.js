@@ -22,6 +22,7 @@ $(()=>{
   // タグ一覧取得成功時コールバック
   function getTagListSuccessCallBack(response) {
     return new Promise((resolve, reject)=>{
+      $("#loading").hide();
       var tags = response['tag'].split(',');
       for(var index in tags) {
         $('#tagGroup').append('<a class="list-group-item" href="#">' + tags[index] + '</a>');
@@ -49,12 +50,14 @@ $(()=>{
   
   // 非同時処理失敗時コールバック
   function errorCallBack(args) {
+    $("#loading").hide();
     var [jqXHR, textStatus, errorThrown] = args;
     console.error(JSON.stringify(jqXHR));
   alert("サーバー内でエラーがあったか、サーバーから応答がありませんでした。");
   }
   
   // 画面表示時タグ一覧取得処理
+  $("#loading").show();
   $.ajax({
     type: "POST",
     url: API_DOMAIN + "findTag.php",
@@ -72,6 +75,7 @@ $(()=>{
  
   // 登録ボタン押下時処理
   $('#save').on('click', ()=>{
+    $("#loading").show();
     $.ajax({
       type: "POST",
       url: API_DOMAIN + "SavePhoto.php",
