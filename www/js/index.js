@@ -1,4 +1,5 @@
 // This is a JavaScript file
+var currentPage = 1;
 
 // スワイプを検知したあとの処理
 function swipeEvent(direction) {
@@ -19,6 +20,8 @@ function loginCheck() {
     $('#login').show();
     $("#loading").hide();
   } else {
+    // ログイン処理中はローディング画像を表示する
+    $("#loading").show();
     var reqParam = {id : loginKey};
     $.ajax({
       type: 'post',
@@ -70,6 +73,9 @@ function login() {
   var loginPassword = $('#formInputPassword').val();
   var userId = CybozuLabs.MD5.calc(loginId + ":" + loginPassword);
   var reqParam = {id : userId};
+  // ログイン処理中はローディング画像を表示する
+  $("#loading").show();
+  
   $.ajax({
     type: 'post',
     url: API_DOMAIN + 'Login.php',
@@ -82,6 +88,7 @@ function login() {
     if (data.result == '0') {
       localStorage.setItem(LOGIN_KEY, userId);
       getPicList(userId).done(function(){
+        $("#loading").hide();
         $('#login').hide();
         $('#picList').show();
         $('#searchIcon').show();
@@ -91,6 +98,7 @@ function login() {
         $("#id-modal").modal();
       }).fail(function(data){
         // 検索失敗時
+        $("#loading").hide();
         console.log(data.statusText);
         localStorage.setItem(LOGIN_KEY, null);
         $("div.modal-body p").text(INDEX_002);
@@ -99,12 +107,14 @@ function login() {
       });
     } else {
       // 検索失敗時
-      localStorage.setItem(LOGIN_KEY, null);
+      $("#loading").hide();
+        localStorage.setItem(LOGIN_KEY, null);
       $("div.modal-body p").text(INDEX_002);
       $("#id-modal").modal();
     }
   }).fail(function(data) {
     // 検索失敗時
+    $("#loading").hide();
     console.log(data.statusText);
     localStorage.setItem(LOGIN_KEY, null);
     $("div.modal-body p").text(INDEX_002);
@@ -115,7 +125,7 @@ function login() {
 
 function getPicList(userId, page) {
   var reqParam = {userId : userId};
-  if (page === undefined) {
+  if (page != null) {
     reqParam.page = page;
   }
   var d = new $.Deferred();
@@ -129,6 +139,7 @@ function getPicList(userId, page) {
   }).done(function(data) {
     // 検索成功時
     if (data.result == '0') {
+        currentPage++;
         var tagArray = [];
         for (var i=0;i < data.array.length; i++) {
           var photoId = data.array[i].photoId;
@@ -186,15 +197,15 @@ function getPicList(userId, page) {
         d.resolve();
     } else {
       // 検索失敗時
-      localStorage.setItem(LOGIN_KEY, null);
       $("div.modal-body p").text(INDEX_002);
       $("#id-modal").modal();
+      d.reject();
     }
   })
   .fail(function() {
     // 検索失敗時
-    localStorage.setItem(LOGIN_KEY, null);
-    alert(INDEX_002);
+    $("div.modal-body p").text(INDEX_002);
+    $("#id-modal").modal();
     d.reject();
   });
   return d.promise(); 
@@ -242,7 +253,7 @@ $(function(){
           ajaxLock = true;
           $("#loading").show();
           $(triggerNode).removeClass("pageEnd");
-          getPicList(localStorage.getItem(LOGIN_KEY)).done(function(){
+          getPicList(localStorage.getItem(LOGIN_KEY), currentPage).done(function(){
             $("#loading").hide();
             ajaxLock = false;
           }).fail(function(){

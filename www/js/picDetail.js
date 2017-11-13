@@ -19,6 +19,8 @@ function createInitHtml() {
   $('#deletePicBtn').val(PICDETAIL_002);
   //フッダー
   document.addEventListener('deviceready', createFooterForAndroid, false);
+  
+  $("#loading").hide();
 }
   function createFooterForAndroid(){
     var devaiceModel = device.model;
@@ -37,19 +39,24 @@ function deletePic() {
 }
 
 function executeDelete() {
+  $("#loading").show();
   var param = {
-    'userId': localStorage.getItem(),
-    'img': localStorage.getItem('selectPic')
+    'userId': localStorage.getItem(LOGIN_KEY),
+    'photoId': localStorage.getItem('selectPic')
   };
   $.ajax({
     type: "POST",
-    url: API_DOMAIN + "deletePhotp.php",
+    url: API_DOMAIN + "DeletePhoto.php",
+    data: param,
+    dataType : 'json',
     timeout: 10000,
     cache: false,
     success: function (msg) {
-      $('#id-modal').modal('hide');
+      // 一覧画面へ自動遷移
+      location.href = "../index.html";
     },
     error: function () {
+      $("#loading").hide();
       alert(PICDETAIL_007);
     }
   });

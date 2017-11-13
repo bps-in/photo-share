@@ -16,13 +16,13 @@ $(function() {
   // スワイプの方向を取得
   function onTouchMove(event) {
     var move = getPosition(event);
-    if (position.x - move.x > 70) { // 70px以上移動しなければスワイプと判断しない
+    if (position.x - move.x > 100) { // 70px以上移動しなければスワイプと判断しない
       direction = 'left'; //左と検知
-    } else if (position.x - move.x < -70){  // 70px以上移動しなければスワイプと判断しない
+    } else if (position.x - move.x < -100){  // 70px以上移動しなければスワイプと判断しない
       direction = 'right'; //右と検知
-    } else if (position.y - move.y > 70) { // 70px以上移動しなければスワイプと判断しない
+    } else if (position.y - move.y > 100) { // 70px以上移動しなければスワイプと判断しない
       direction = 'up'; //上と検知
-    } else if (position.y - move.y < -70){  // 70px以上移動しなければスワイプと判断しない
+    } else if (position.y - move.y < -100){  // 70px以上移動しなければスワイプと判断しない
       direction = 'down'; //下と検知
     }
   }
