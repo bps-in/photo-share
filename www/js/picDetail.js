@@ -35,6 +35,14 @@ function deletePic() {
   $('#ok-btn').html(PICDETAIL_005);
   $('#cancel-btn').html(PICDETAIL_006);
   $('.modal-body').html();
+  $('#ok-btn').off('click');
+  $('#ok-btn').on('click', function(){
+    $("#id-modal").on('hidden.bs.modal', function(){
+      $("#id-modal").off('hidden.bs.modal');
+      executeDelete();
+    });
+    $("#id-modal").modal('hide');
+  });
   $("#id-modal").modal();
 }
 
@@ -51,23 +59,38 @@ function executeDelete() {
     dataType : 'json',
     timeout: 10000,
     cache: false,
-    success: function (msg) {
-      // 一覧画面へ自動遷移
-      location.href = "../index.html";
+    success: function (data) {
+      if (data.result == '0') {
+        // 一覧画面へ自動遷移
+        location.href = "../index.html";
+      } else {
+        $("#loading").hide();
+        $('#modal-msg').html(PICDETAIL_007);
+        $('#ok-btn').html(PICDETAIL_005);
+        $('#cancel-btn').hide();
+        $('#ok-btn').off('click');
+        $('#ok-btn').on('click', function(){
+          $("#id-modal").modal('hide');
+        });
+        $("#id-modal").modal();
+      }
     },
     error: function () {
       $("#loading").hide();
-      alert(PICDETAIL_007);
+      $('#modal-msg').html(PICDETAIL_007);
+      $('#ok-btn').html(PICDETAIL_005);
+      $('#cancel-btn').hide();
+      $('#ok-btn').off('click');
+      $('#ok-btn').on('click', function(){
+        $("#id-modal").modal('hide');
+      });
+      $("#id-modal").modal();
     }
   });
 }
 
 function swipeEvent(direction) {
   if (direction == 'right') {
-    location.href = "../index.html";
-  } else if (direction == 'left') {
-    location.href = "../index.html";
-  } else if (direction == 'up') {
     location.href = "../index.html";
   }
 }

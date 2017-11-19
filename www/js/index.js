@@ -39,8 +39,6 @@ function loginCheck() {
           $('#searchIcon').show();
           $('#logoutIcon').show();
           $("#loading").hide();
-          $("div.modal-body p").text(INDEX_001);
-          $("#id-modal").modal();
           
         }).fail(function(){
           // 検索失敗時
@@ -93,9 +91,6 @@ function login() {
         $('#picList').show();
         $('#searchIcon').show();
         $('#logoutIcon').show();
-        $("div.modal-body p").text(INDEX_001);
-        $("div.modal-body p.error").text("");
-        $("#id-modal").modal();
       }).fail(function(data){
         // 検索失敗時
         $("#loading").hide();
@@ -231,7 +226,7 @@ function logout() {
 }
 
 $(function(){
-  localStorage.setItem('selectPic', null);
+  localStorage.removeItem('selectPic');
   $('#searchIcon').hide();
   $('#logoutIcon').hide();
   $('#picList').hide();

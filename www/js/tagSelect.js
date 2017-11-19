@@ -1,12 +1,12 @@
 var inputTags = [];
 userId = "";
 
-$(() => {
-  this.userId = localStorage.getItem(LOGIN_KEY);
+$(function() {
+  userId = localStorage.getItem(LOGIN_KEY);
   
   // タグ一覧取得成功時コールバック
   function getTagListSuccessCallBack(response) {
-    return new Promise((resolve, reject)=>{
+    return new Promise(function(resolve, reject){
       var tags = response['tag'].split(',');
       for(var index in tags) {
         $('#tagGroup').append('<a class="list-group-item" href="#">' + tags[index] + '</a>');
@@ -32,46 +32,47 @@ $(() => {
     });
   }
   
-  // 非同時処理失敗時コールバック
-  function errorCallBack(args) {
-    var [jqXHR, textStatus, errorThrown] = args;
-    console.error(JSON.stringify(jqXHR));
-    alert("サーバー内でエラーがあったか、サーバーから応答がありませんでした。");
-  }
-  
   // タグ一覧取得処理
   $.ajax({
     type: "POST",
     url: API_DOMAIN + "findTag.php",
     timeout: 10000,
     cache: false,
-  data: {
-      'userId': this.userId,
+    data: {
+      'userId': userId,
       'photoId': ''
     },
-	dataType: 'json'
+    dataType: 'json'
   }).then(
-    (response, textStatus, jqXHR) => {getTagListSuccessCallBack(response)},
-    (...args) => {errorCallBack(args)}
+    function(response, textStatus, jqXHR) {getTagListSuccessCallBack(response)},
+    function(jqXHR, textStatus, errorThrown) {
+       console.error(JSON.stringify(jqXHR));
+       alert("サーバー内でエラーがあったか、サーバーから応答がありませんでした。");
+    }
   ); 
   
   // 検索処理
-  $('#search').on('click', () => {
+  $('#search').on('click', function() {
       // inputTags配列を文字列に変換して送信する
       var tags = inputTags.join(',');
+      console.log(111111);
+      console.log(tags);
      $.ajax({
        type: "POST",
        url: API_DOMAIN + "GetPhotoInfo.php",
        timeout: 10000,
        cache: false,
-      data: {
-        'userId': this.userId,
+       data: {
+        'userId': userId,
         'tag': tags
       },
-	  dataType: 'json'
+    dataType: 'json'
     }).then(
-      (response, textStatus, jqXHR) => {console.log(response)},
-      (...args) => {errorCallBack(args)}
+      function(response, textStatus, jqXHR) {console.log(response)},
+      function(jqXHR, textStatus, errorThrown) {
+        console.error(JSON.stringify(jqXHR));
+        alert("サーバー内でエラーがあったか、サーバーから応答がありませんでした。");
+      }
     ); 
   }); 
 });

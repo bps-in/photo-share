@@ -35,6 +35,10 @@ div.searchBtn {
   position:fixed;
   z-index: 999;
 }
+/*contents高さ指定*/
+div#contents {
+  height: 100vh;
+}
 
 /*モーダル 修正
 iPhoneの場合、端末の時刻部分とモーダルが被るためマージン追加

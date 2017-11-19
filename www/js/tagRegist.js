@@ -4,24 +4,25 @@ var photoId = "";
 var userId = "";
 var img = "";
 
-$(()=>{
-　//TODO 動作確認用スタブ
-  // 現在タグ編集機能は未完成のため一旦スタブもコメントアウトthis.photoId = "27"; 
-  // this.photoId = localStorage.getItem('selectPic');
+$(function(){
+　// 画像ID取得
+　if (localStorage.getItem('selectPic') != null) {
+    photoId = localStorage.getItem('selectPic');
+　}
   
   // ユーザーID取得
-  this.userId = localStorage.getItem(LOGIN_KEY);
+  userId = localStorage.getItem(LOGIN_KEY);
   
   // 画像取得
-  this.img = localStorage.getItem(PICTURE_BINARY);
+  img = localStorage.getItem(PICTURE_BINARY);
   
   $('.jumbotron').css({
-    backgroundImage: 'url("data:image/png;base64, ' + this.img + '")'
+    backgroundImage: 'url("data:image/png;base64, ' + img + '")'
   });
   
   // タグ一覧取得成功時コールバック
   function getTagListSuccessCallBack(response) {
-    return new Promise((resolve, reject)=>{
+    return new Promise(function(resolve, reject){
       $("#loading").hide();
       var tags = response['tag'].split(',');
       for(var index in tags) {
@@ -48,14 +49,6 @@ $(()=>{
     });
   }
   
-  // 非同時処理失敗時コールバック
-  function errorCallBack(args) {
-    $("#loading").hide();
-    var [jqXHR, textStatus, errorThrown] = args;
-    console.error(JSON.stringify(jqXHR));
-  alert("サーバー内でエラーがあったか、サーバーから応答がありませんでした。");
-  }
-  
   // 画面表示時タグ一覧取得処理
   $("#loading").show();
   $.ajax({
@@ -63,18 +56,21 @@ $(()=>{
     url: API_DOMAIN + "findTag.php",
     timeout: 10000,
     cache: false,
-	data: {
-      'userId': this.userId,
-      'photoId': this.photoId
+    data: {
+      'userId': userId,
+      'photoId': photoId
     },
-	dataType: 'json'
+  dataType: 'json'
   }).then(
-    (response, textStatus, jqXHR) => {getTagListSuccessCallBack(response)},
-    (...args) => {errorCallBack(args)}
+    function(response, textStatus, jqXHR) {getTagListSuccessCallBack(response)},
+    function(jqXHR, textStatus, errorThrown) {
+      $("#loading").hide();
+      alert("サーバー内でエラーがあったか、サーバーから応答がありませんでした。");
+    }
   ); 	
  
   // 登録ボタン押下時処理
-  $('#save').on('click', ()=>{
+  $('#save').on('click', function(){
     $("#loading").show();
     $.ajax({
       type: "POST",
@@ -82,17 +78,25 @@ $(()=>{
       timeout: 10000,
       cache: false,
       data: {
-          'userId': this.userId, 
-          'img': this.img,
+          'userId': userId, 
+          'img': img,
           'tag': JSON.stringify($("#tagInput").val().split(',')), 
-          'photoId': this.photoId //新規の場合は空文字をAPIへ送る
+          'photoId': photoId //新規の場合は空文字をAPIへ送る
       },
 	    dataType: 'json'
     }).then(
-      (response, textStatus, jqXHR) => {location.href = "../index.html"},
-      (...args) => {errorCallBack(args)}
+      function(response, textStatus, jqXHR) {location.href = "../index.html"},
+      function(jqXHR, textStatus, errorThrown) {
+        $("#loading").hide();
+        console.error(JSON.stringify(jqXHR));
+        alert("サーバー内でエラーがあったか、サーバーから応答がありませんでした。");
+      }
     )
   });  
+  
+  $('#cancel').on('click', function(){
+    location.href = "../index.html";
+  });
 });
 
 // tagを追加する
@@ -123,4 +127,5 @@ function setTags() {
   }
   $("#tagInput").val(tags);
 }
+
 
