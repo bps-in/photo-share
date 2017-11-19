@@ -43,6 +43,11 @@ function deletePic() {
     });
     $("#id-modal").modal('hide');
   });
+  $('#cancel').off('click');
+　$('#cancel-btn').show();
+  $('#cancel-btn').on('click', function(){
+    $("#id-modal").modal('hide');
+  });
   $("#id-modal").modal();
 }
 
