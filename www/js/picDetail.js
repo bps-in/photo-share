@@ -64,7 +64,7 @@ function displayPhoto(){
 function createFooterForAndroid(){
   var devaiceModel = device.model;
   if(devaiceModel.indexOf('iPhone') === -1){
-    var downloadBtn = '<div id =><input class="btn btn-primary btn-block" onclick="download();" value=' + PICDETAIL_003 +'></div>'
+    var downloadBtn = '<div><input type="button" class="btn btn-primary btn-block" onclick="download();" value=' + PICDETAIL_003 +'></div>'
     $('.downloadBtn').html(downloadBtn);
   }      
 }
