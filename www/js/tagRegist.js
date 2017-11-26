@@ -14,10 +14,14 @@ $(function(){
   userId = localStorage.getItem(LOGIN_KEY);
   
   // 画像取得
-  img = localStorage.getItem(PICTURE_BINARY);
-  
-  $('.jumbotron').css({
-    backgroundImage: 'url("data:image/png;base64, ' + img + '")'
+  document.addEventListener ("deviceready", function(){
+    var selectedImgDataMng = new SelectedImgDataMng();
+    selectedImgDataMng.find().done(function(imgData){
+      img = imgData;
+      $('.jumbotron').css({
+        backgroundImage: 'url("data:image/png;base64, ' + img + '")'
+      });
+    });
   });
   
   // タグ一覧取得成功時コールバック
@@ -72,17 +76,23 @@ $(function(){
   // 登録ボタン押下時処理
   $('#save').on('click', function(){
     $("#loading").show();
+    
+    // リクエストデータ作成
+    var param = {};
+    param.userId = userId;
+    // タグ編集の場合は写真データはアップデートしない
+    if (!photoId) {
+      param.img = img; 
+    }
+    param.tag = JSON.stringify($("#tagInput").val().split(','));
+    param.photoId = photoId; //新規の場合は空文字をAPIへ送る
+    
     $.ajax({
       type: "POST",
       url: API_DOMAIN + "SavePhoto.php",
       timeout: 10000,
       cache: false,
-      data: {
-          'userId': userId, 
-          'img': img,
-          'tag': JSON.stringify($("#tagInput").val().split(',')), 
-          'photoId': photoId //新規の場合は空文字をAPIへ送る
-      },
+      data: param,
 	    dataType: 'json'
     }).then(
       function(response, textStatus, jqXHR) {location.href = "../index.html"},

@@ -210,7 +210,6 @@ function picTap(e) {
   //TODO picture_binari以外も定数化したい
   localStorage.setItem('selectPic', e.getAttribute("data-photoId"));
   localStorage.setItem('tagNames', e.getAttribute("data-tagName"));
-  localStorage.setItem(PICTURE_BINARY, e.getAttribute("data-pic"));
   location.href="./page/picDetail.html";
 }
 
@@ -226,6 +225,10 @@ function logout() {
 }
 
 $(function(){
+  var selectedImgDataMng = new SelectedImgDataMng();
+  document.addEventListener ("deviceready", function(){
+    selectedImgDataMng.delete();
+  });
   localStorage.removeItem('selectPic');
   $('#searchIcon').hide();
   $('#logoutIcon').hide();

@@ -6,9 +6,12 @@ function snapPicture() {
   // 撮影成功コールバック
   function onSuccess(imageData){      
     // 画像データをローカルストレージに格納
-    localStorage.setItem(PICTURE_BINARY, imageData);
-    // タグ選択画面に遷移
-    window.location.href = './tagRegist.html';
+    $("#loading").show();
+    var selectedImgDataMng = new SelectedImgDataMng();
+    selectedImgDataMng.save(imageData).then(function(){
+      // タグ選択画面に遷移
+      window.location.href = './tagRegist.html';
+    }, onFail);
   }
 
   // 撮影失敗コールバック
