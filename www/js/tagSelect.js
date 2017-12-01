@@ -53,27 +53,10 @@ $(function() {
   
   // 検索処理
   $('#search').on('click', function() {
-      // inputTags配列を文字列に変換して送信する
-      var tags = inputTags.join(',');
-      console.log(111111);
-      console.log(tags);
-     $.ajax({
-       type: "POST",
-       url: API_DOMAIN + "GetPhotoInfo.php",
-       timeout: 10000,
-       cache: false,
-       data: {
-        'userId': userId,
-        'tag': tags
-      },
-    dataType: 'json'
-    }).then(
-      function(response, textStatus, jqXHR) {console.log(response)},
-      function(jqXHR, textStatus, errorThrown) {
-        console.error(JSON.stringify(jqXHR));
-        alert("サーバー内でエラーがあったか、サーバーから応答がありませんでした。");
-      }
-    ); 
+    // inputTags配列を文字列に変換して送信する
+    var tags = inputTags.join(',');
+    localStorage.setItem("tags",tags);
+    location.href = "../index.html";
   }); 
 });
 
