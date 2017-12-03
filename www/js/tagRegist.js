@@ -20,9 +20,18 @@ $(function(){
     var selectedImgDataMng = new SelectedImgDataMng();
     selectedImgDataMng.find().done(function(imgData){
       img = imgData;
+      var picDataText = '<img src="data:image/png;base64, ' + imgData + '">';
+      $('.container .image').html(picDataText);
+
+
+
+/** backup
       $('.jumbotron').css({
         backgroundImage: 'url("data:image/png;base64, ' + img + '")'
       });
+*/
+
+
     });
   });
   
@@ -32,7 +41,9 @@ $(function(){
      findTagList()
      .then(function(findTagListRes){
        dispTagList(findTagListRes['tag']);
-       dispOwnTag(findOwnTagRes['tag']);
+       if (findOwnTagRes != null) {
+         dispOwnTag(findOwnTagRes['tag']);
+       }
        $("#loading").hide();
      })
      .catch(function(){
@@ -73,7 +84,7 @@ $(function(){
         console.error(JSON.stringify(jqXHR));
         alert("サーバー内でエラーがあったか、サーバーから応答がありませんでした。");
       }
-    )
+    );
   });  
   
   $('#cancel').on('click', function(){
@@ -81,6 +92,7 @@ $(function(){
   });
 });
 
+/** backup start 
 // tagを追加する
 function tagAdd(index) {
   inputTags.push($('#tagGroup>.list-group-item').eq(index).text());
@@ -108,6 +120,34 @@ function setTags() {
     }
   }
   $("#tagInput").val(tags);
+}
+backup end */
+
+// タグを追加する
+function addTagToInput(addedTagName) {
+  var originalTags = $('#tagInput').val();
+  if (originalTags !== '') {
+    originalTags += ',';
+  }
+  $('#tagInput').val(originalTags + addedTagName);
+}
+
+// タグを削除する
+function deleteTagFromInput(deletedTagName) {
+  var originalTags = $('#tagInput').val();
+  var originalTagsArr = originalTags.split(',');
+  for(var index in originalTagsArr) {
+    if (originalTagsArr[index] === '') {
+      continue;
+    }
+    
+    if (originalTagsArr[index] === deletedTagName) {
+      originalTagsArr.splice(index, 1);
+      break;
+    }
+  }
+  var newTagsStr = originalTagsArr.join(',');
+  $('#tagInput').val(newTagsStr);
 }
 
 // 自分のタグ取得
@@ -147,13 +187,12 @@ function dispOwnTag(ownTag) {
   $('#tagGroup .list-group-item').each(function(){
     var thisTag = $(this).attr('data-tag-name');
     var tags = ownTag.split(',');
-    console.log(thisTag);
     for(var index in tags) {
       if (tags[index] === '') {
         continue;
       }
       
-      if (thisTag === tags[index]) {
+      if (tags[index] === thisTag) {
         $(this).addClass('active');
       }
     }
@@ -196,6 +235,17 @@ function dispTagList(tagsStr) {
 
   // タグリスト押下時処理
   $('#tagGroup>.list-group-item').on('click', function(){
+    var clickTagName = $(this).attr('data-tag-name');
+    var isClickedActive = $(this).hasClass('active');
+    if (isClickedActive) {
+      $(this).removeClass('active');
+      deleteTagFromInput(clickTagName);
+    } else {
+      $(this).addClass('active');
+      addTagToInput(clickTagName);
+    }
+    
+    /** backup start 
     var index = $('#tagGroup>.list-group-item').index(this);
     if($('#tagGroup>.list-group-item').eq(index).hasClass('active')) {
       $('#tagGroup>.list-group-item').eq(index).removeClass('active');
@@ -209,16 +259,7 @@ function dispTagList(tagsStr) {
       tagAdd(index);
     }
     setTags();
+    backup end */
   });
 }
-
-// HTMLエスケープ
-function escapeHtml(text) {
-    return text
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;")
-          .replace(/"/g, "&quot;")
-          .replace(/'/g, "&#039;");
-    }
 

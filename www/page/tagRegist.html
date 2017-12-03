@@ -15,6 +15,7 @@
   <script src="../common/js/jquery-3.2.1.min.js"></script>
   <script src="../common/js/bootstrap.min.js"></script>
   <script src="../common/js/selectedImgDataMng.js"></script>
+  <script src="../common/js/escape.js"></script>
   <script src="../components/loader.js"></script>
   <script src="../js/constants.js"></script>
   <script src="../js/tagRegist.js"></script>
@@ -29,7 +30,12 @@
 　
 </head>
 <body>
-  <div id="contents">
+  <div id="contents" class="tagRegistPage">
+
+
+
+
+<!-- backup
     <div class="jumbotron">
       <div class="container">
         <div class="row">
@@ -43,8 +49,25 @@
         </div>
       </div>
     </div>
+-->
 
-    <div class="container">
+
+
+    <div class="container imageWrap">
+      <div class="image"></div>
+      <div class="inputTag input-group">
+        <div class="row">
+          <div class="col-lg-5">
+            <p class="input-group">
+              <span class="input-group-addon">#</span>
+              <input type="text" id="tagInput" class="form-control" placeholder="カンマ「,」区切りで入力してください">
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container tags">
       <div class="row">
         <div class="col-sm-8">
           <div class="list-group" id="tagGroup">
@@ -53,17 +76,17 @@
       </div>
     </div>
 
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-8 text-center">
-          <input type="button" id="save" class="btn btn-primary" value="登録">
-          <input type="button" id="cancel" class="btn btn-primary" value="キャンセル">
-        </div>
+    <div class="container btns">
+      <div class="cancelBtn">
+        <h1 id="cancel"><span class="text-danger"><i class="fa fa-ban fa-lg" aria-hidden="true"></i></span></h1>
+      </div>
+      <div class="saveBtn">
+        <h1 id="save"><span class="text-success"><i class="fa fa-arrow-circle-up fa-lg" aria-hidden="true"></i></span></h1>
       </div>
     </div>
+
   </div>
-  <br>
-  
+
   <div id="loading">
     <div class="loader">
       <img src="../images/gif-load.gif">

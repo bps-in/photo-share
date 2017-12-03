@@ -11,7 +11,6 @@ function swipeEvent(direction) {
 }
 
 function loginCheck() {
-    // localStorage.setItem(LOGIN_KEY, null);
   var loginKey = localStorage.getItem(LOGIN_KEY);
   if (loginKey == null) {
     $('#picList').hide();
@@ -42,7 +41,7 @@ function loginCheck() {
             $("#loading").hide();
           }).fail(function(){
             // 検索失敗時
-            localStorage.setItem(LOGIN_KEY, null);
+            localStorage.clear();
             $("div.modal-body p").text(INDEX_002);
             $("#id-modal").modal();
           });
@@ -55,14 +54,14 @@ function loginCheck() {
             $("#loading").hide(); 
           }).fail(function(){
             // 検索失敗時
-            localStorage.setItem(LOGIN_KEY, null);
+            localStorage.clear();
             $("div.modal-body p").text(INDEX_002);
             $("#id-modal").modal();
           });      
         }
       } else {
         // 検索失敗時
-        localStorage.setItem(LOGIN_KEY, null);
+        localStorage.clear();
         $('#picList').hide();
         $('#searchIcon').hide();
         $('#logoutIcon').hide();
@@ -70,8 +69,8 @@ function loginCheck() {
         $("#loading").hide();
       }
     }).fail(function() {
-      // 検索失敗時
-      localStorage.setItem(LOGIN_KEY, null);
+      // ログイン失敗時
+      localStorage.clear();
       $('#picList').hide();
       $('#searchIcon').hide();
       $('#logoutIcon').hide();
@@ -106,38 +105,34 @@ function login() {
         $('#searchIcon').show();
         $('#logoutIcon').show();
       }).fail(function(data){
-        // 検索失敗時
+        // 写真一覧失敗時
+        localStorage.clear();
         $("#loading").hide();
-        console.log(data.statusText);
-        localStorage.setItem(LOGIN_KEY, null);
         $("div.modal-body p").text(INDEX_002);
-        $("div.modal-body label.error").text("getPic:" + data.statusText);// テスト後削除
         $("#id-modal").modal();
       });
     } else {
-      // 検索失敗時
+      // ログイン失敗時
+      localStorage.clear();
       $("#loading").hide();
-        localStorage.setItem(LOGIN_KEY, null);
       $("div.modal-body p").text(INDEX_002);
       $("#id-modal").modal();
     }
   }).fail(function(data) {
-    // 検索失敗時
+    // ログイン失敗時
+    localStorage.clear();
     $("#loading").hide();
-    console.log(data.statusText);
-    localStorage.setItem(LOGIN_KEY, null);
     $("div.modal-body p").text(INDEX_002);
-    $("div.modal-body label.error").text("loginAPI:" + data.statusText);// テスト後削除
     $("#id-modal").modal();
   });
 }
 
 function getPicList(userId, page, tags) {
   var reqParam = {userId : userId};
-  if (page != null) {
+  if (typeof page !== undefined && page != null) {
     reqParam.page = page;
   }
-  if (tags != null) {
+  if (typeof tags !== undefined && tags != null) {
     reqParam.tag = tags;
   }
   var d = new $.Deferred();
@@ -153,55 +148,58 @@ function getPicList(userId, page, tags) {
     if (data.result == '0') {
         currentPage++;
         var tagArray = [];
-        for (var i=0;i < data.array.length; i++) {
-          var photoId = data.array[i].photoId;
-          var imgSrc = "data:image/png;base64," + data.array[i].photoData;
-          var tagNames = "";
-          if (data.array[i].tag1 != null) {
-            tagNames += "#" + data.array[i].tag1 + " ";
+        if (data.array.length > 0) {
+          $("div#picList div.row div.pageEnd").removeClass("pageEnd");
+          for (var i=0;i < data.array.length; i++) {
+            var photoId = data.array[i].photoId;
+            var imgSrc = "data:image/png;base64," + data.array[i].photoData;
+            var tagNames = "";
+            if (data.array[i].tag1 != null) {
+              tagNames += "#" + escapeHtml(data.array[i].tag1) + " ";
+            }
+            if (data.array[i].tag2 != null) {
+              tagNames += "#" + escapeHtml(data.array[i].tag2) + " ";
+            }
+            if (data.array[i].tag3 != null) {
+              tagNames += "#" + escapeHtml(data.array[i].tag3) + " ";
+            }
+            if (data.array[i].tag4 != null) {
+              tagNames += "#" + escapeHtml(data.array[i].tag4) + " ";
+            }
+            if (data.array[i].tag5 != null) {
+              tagNames += "#" + escapeHtml(data.array[i].tag5) + " ";
+            }
+            if (data.array[i].tag6 != null) {
+              tagNames += "#" + escapeHtml(data.array[i].tag6) + " ";
+            }
+            if (data.array[i].tag7 != null) {
+              tagNames += "#" + escapeHtml(data.array[i].tag7) + " ";
+            }
+            if (data.array[i].tag8 != null) {
+              tagNames += "#" + escapeHtml(data.array[i].tag8) + " ";
+            }
+            if (data.array[i].tag9 != null) {
+              tagNames += "#" + escapeHtml(data.array[i].tag9) + " ";
+            }
+            if (data.array[i].tag10 != null) {
+              tagNames += "#" + escapeHtml(data.array[i].tag10) + " ";
+            }
+            if (tagNames.length > 2) {
+              tagNames = tagNames.slice(0, -1);
+            }
+            var imgTag = '';
+            if (i == data.array.length - 1) {
+              imgTag = '<div class="col-xs-6 col-md-3 pageEnd">';
+            } else {
+              imgTag = '<div class="col-xs-6 col-md-3">';
+            }
+            imgTag += '<a class="thumbnail" href="javascript:void(0);" onClick="picTap(this);" data-photoId="' + photoId + '" data-pic="' + data.array[i].photoData + '" data-tagName="' + tagNames + '">';
+            imgTag += '<img src="' + imgSrc + '" alt="" />';
+            imgTag += '</a></div>';
+            tagArray.push(imgTag);
           }
-          if (data.array[i].tag2 != null) {
-            tagNames += "#" + data.array[i].tag2 + " ";
-          }
-          if (data.array[i].tag3 != null) {
-            tagNames += "#" + data.array[i].tag3 + " ";
-          }
-          if (data.array[i].tag4 != null) {
-            tagNames += "#" + data.array[i].tag4 + " ";
-          }
-          if (data.array[i].tag5 != null) {
-            tagNames += "#" + data.array[i].tag5 + " ";
-          }
-          if (data.array[i].tag6 != null) {
-            tagNames += "#" + data.array[i].tag6 + " ";
-          }
-          if (data.array[i].tag7 != null) {
-            tagNames += "#" + data.array[i].tag7 + " ";
-          }
-          if (data.array[i].tag8 != null) {
-            tagNames += "#" + data.array[i].tag8 + " ";
-          }
-          if (data.array[i].tag9 != null) {
-            tagNames += "#" + data.array[i].tag9 + " ";
-          }
-          if (data.array[i].tag10 != null) {
-            tagNames += "#" + data.array[i].tag10 + " ";
-          }
-          if (tagNames.length > 2) {
-            tagNames = tagNames.slice(0, -1);
-          }
-          var imgTag = '';
-          if (i == data.array.length - 1) {
-            imgTag = '<div class="col-xs-6 col-md-3 pageEnd">';
-          } else {
-            imgTag = '<div class="col-xs-6 col-md-3">';
-          }
-          imgTag += '<a class="thumbnail" href="javascript:void(0);" onClick="picTap(this);" data-photoId="' + photoId + '" data-pic="' + data.array[i].photoData + '" data-tagName="' + tagNames + '">';
-          imgTag += '<img src="' + imgSrc + '" alt="" />';
-          imgTag += '</a></div>';
-          tagArray.push(imgTag);
+          $("div#picList div.row").append(tagArray.join(''));
         }
-        $("div#picList div.row").append(tagArray.join(''));
         $('#login').hide();
         $('#picList').show();
         $('#searchIcon').show();
@@ -231,10 +229,11 @@ function picTap(e) {
 }
 
 function logout() {
-  //TODO アラートかモーダルだした方がいいかも？
   // ログアウト処理実行、ログイン画面表示
-  localStorage.setItem('selectPic', null);
-  localStorage.setItem(LOGIN_KEY, null);
+  localStorage.clear();
+  $("div#picList div.row").empty();
+  $("#formInputId").val("");
+  $("#formInputPassword").val("");
   $('#searchIcon').hide();
   $('#logoutIcon').hide();
   $('#picList').hide();
@@ -247,6 +246,7 @@ $(function(){
     selectedImgDataMng.delete();
   });
   localStorage.removeItem('selectPic');
+  localStorage.removeItem('tagNames');
   $('#searchIcon').hide();
   $('#logoutIcon').hide();
   $('#picList').hide();
@@ -268,7 +268,6 @@ $(function(){
           if (!ajaxLock) {
             ajaxLock = true;
             $("#loading").show();
-            $(triggerNode).removeClass("pageEnd");
             getPicList(localStorage.getItem(LOGIN_KEY), currentPage, localStorage.getItem("tags")).done(function(){
               $("#loading").hide();
               ajaxLock = false;
@@ -291,7 +290,6 @@ $(function(){
           if (!ajaxLock) {
             ajaxLock = true;
             $("#loading").show();
-            $(triggerNode).removeClass("pageEnd");
             getPicList(localStorage.getItem(LOGIN_KEY), currentPage).done(function(){
               $("#loading").hide();
               ajaxLock = false;

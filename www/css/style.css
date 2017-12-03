@@ -35,6 +35,24 @@ div.searchBtn {
   position:fixed;
   z-index: 999;
 }
+/*キャンセルボタン*/
+div.cancelBtn {
+  width: 20px;
+  height: 20px;
+  bottom: 80px;
+  right: 60px;
+  position:fixed;
+  z-index: 999;
+}
+/*保存ボタン*/
+div.saveBtn {
+  width: 20px;
+  height: 20px;
+  bottom: 80px;
+  right: 160px;
+  position:fixed;
+  z-index: 999;
+}
 /*contents高さ指定*/
 div#contents {
   height: 100vh;
@@ -47,3 +65,16 @@ iPhoneの場合、端末の時刻部分とモーダルが被るためマージ�
  @media (min-width:768px){.modal-dialog{width:600px;margin:30px auto}
 ---------------------------------*/
 .modal-dialog{margin-top: 30px;}
+
+/* タグ登録画面 タグ入力欄 */
+.tagRegistPage .container.imageWrap {
+  position: relative;
+}
+.tagRegistPage .container.imageWrap .inputTag {
+  position: absolute;
+  bottom: 50px;
+  z-index: 999;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%); /* Safari用 */
+  transform: translate(-50%, -50%);
+}

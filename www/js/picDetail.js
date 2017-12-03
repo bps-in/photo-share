@@ -157,7 +157,7 @@ function createFile(dirEntry, fileName, isAppend) {
       writeFile(fileEntry, toBlob(imgData), isAppend);
     });
   }, function () {
-    alert("error")
+    alert("error");
   });
 }
 
@@ -168,8 +168,9 @@ function toBlob(base64) {
     buffer[i] = bin.charCodeAt(i);
   }
   // Blobを作成
+  var blob = null;
   try {
-    var blob = new Blob([buffer.buffer], {
+    blob = new Blob([buffer.buffer], {
       type: 'image/png'
     });
   } catch (e) {
@@ -197,6 +198,6 @@ function readFile(fileEntry) {
     };
     reader.readAsText(file);
   }, function () {
-    alert("error")
+    alert("error");
   });
 }
