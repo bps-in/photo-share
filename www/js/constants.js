@@ -18,6 +18,7 @@ const PICDETAIL_005 = "OK";
 const PICDETAIL_006 = "Cancel";
 const PICDETAIL_007 = "削除に失敗しました。";
 const PICDETAIL_008 = "ダウンロードに失敗しました。";
+const PICDETAIL_009 = "戻る";
 
 // picList.html定数
 const PICLIST_001 = "";

@@ -28,6 +28,7 @@ function createInitHtml() {
     }
     
   }, false);
+  $('#backToIndexBtn').val(PICDETAIL_009);
 }
 function displayPhoto(){
   var deferrd = new $.Deferred;
