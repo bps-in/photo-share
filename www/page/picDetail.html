@@ -17,8 +17,21 @@
       <script src="../components/loader.js"></script>
       <script src="../common/js/swipe.js"></script>
       <script src="../common/js/selectedImgDataMng.js"></script>
-      <script src="../js/picDetail.js"></script>
       <script src="../js/constants.js"></script>
+      <script src="../js/picDetail.js"></script>
+       <script type="text/javascript">
+  // Android戻るボタン無効
+  ons.ready(function() {
+    ons.setDefaultDeviceBackButtonListener(function(event) {
+      ons.notification.confirm('アプリを終了しますか？<br/>Do you want to close the app?') 
+        .then(function(index) {
+          if (index === 1) { // OK が押された場合
+            navigator.app.exitApp(); // アプリを終了します。
+          }
+        });
+    });
+  });
+  </script>
     </head>
     <body>
       <section>
@@ -44,6 +57,14 @@
                 </div>
               <div class="form-inline well">
                 <label class="text-info"></label>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="form-group">
+                <label for="comment">コメント</label>
+                <textarea id="comment" rows="3" class="form-control" readonly></textarea>
               </div>
             </div>
           </div>

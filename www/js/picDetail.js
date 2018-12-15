@@ -48,10 +48,14 @@ function displayPhoto(){
   }).done(function(data) {
     var picDataText = '<img src="data:image/png;base64, ' + data.array[0].photoData + '">';
     $('.picDataText').html(picDataText);
+    $("#comment").val(data.array[0].comment);
     
     // 画像データをローカルストレージに格納
     var selectedImgDataMng = new SelectedImgDataMng();
     selectedImgDataMng.save(data.array[0].photoData);
+    
+    // コメントをローカルストレージに格納
+    localStorage.setItem('selectPicComment', data.array[0].comment);
     
     deferrd.resolve();
   })

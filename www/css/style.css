@@ -35,6 +35,15 @@ div.searchBtn {
   position:fixed;
   z-index: 999;
 }
+/*タグ表示エリア*/
+div.tagNameDisp {
+  width: 20px;
+  height: 20px;
+  top: 10px;
+  left: 60px;
+  position:fixed;
+  z-index: 999;
+}
 /*キャンセルボタン*/
 div.cancelBtn {
   width: 20px;

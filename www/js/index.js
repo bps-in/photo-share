@@ -16,11 +16,13 @@ function loginCheck() {
     $('#picList').hide();
     $('#searchIcon').hide();
     $('#logoutIcon').hide();
+    $('#tagSelectName').hide();
     $('#login').show();
     $("#loading").hide();
   } else {
     // ログイン処理中はローディング画像を表示する
     $("#loading").show();
+    $('#tagSelectName').hide();
     var reqParam = {id : loginKey};
     $.ajax({
       type: 'post',
@@ -38,6 +40,11 @@ function loginCheck() {
             $('#picList').show();
             $('#searchIcon').show();
             $('#logoutIcon').show();
+            if(localStorage.getItem("tags") != null && localStorage.getItem("tags").length > 0) {
+              $('#tagSelectName').show();
+            } else {
+              $('#tagSelectName').hide();
+            }
             $("#loading").hide();
           }).fail(function(){
             // 検索失敗時
@@ -51,13 +58,14 @@ function loginCheck() {
             $('#picList').show();
             $('#searchIcon').show();
             $('#logoutIcon').show();
-            $("#loading").hide(); 
+            $('#tagSelectName').hide();
+            $("#loading").hide();
           }).fail(function(){
             // 検索失敗時
             localStorage.clear();
             $("div.modal-body p").text(INDEX_002);
             $("#id-modal").modal();
-          });      
+          });
         }
       } else {
         // 検索失敗時
@@ -65,6 +73,7 @@ function loginCheck() {
         $('#picList').hide();
         $('#searchIcon').hide();
         $('#logoutIcon').hide();
+        $('#tagSelectName').hide();
         $('#login').show();
         $("#loading").hide();
       }
@@ -74,6 +83,7 @@ function loginCheck() {
       $('#picList').hide();
       $('#searchIcon').hide();
       $('#logoutIcon').hide();
+      $('#tagSelectName').hide();
       $('#login').show();
       $("#loading").hide();
     });
@@ -104,6 +114,7 @@ function login() {
         $('#picList').show();
         $('#searchIcon').show();
         $('#logoutIcon').show();
+        $('#tagSelectName').hide();
       }).fail(function(data){
         // 写真一覧失敗時
         localStorage.clear();
@@ -133,6 +144,11 @@ function getPicList(userId, page, tags) {
     reqParam.page = page;
   }
   if (typeof tags !== undefined && tags != null) {
+    var selectTags = tags;
+    if (selectTags.length > 20) {
+      selectTags = selectTags.slice(0, 19) + "…";
+    }
+    $('.tagNameDisp input').val(selectTags);
     reqParam.tag = tags;
   }
   var d = new $.Deferred();
@@ -193,18 +209,42 @@ function getPicList(userId, page, tags) {
             } else {
               imgTag = '<div class="col-xs-6 col-md-3">';
             }
-            imgTag += '<a class="thumbnail" href="javascript:void(0);" onClick="picTap(this);" data-photoId="' + photoId + '" data-pic="' + data.array[i].photoData + '" data-tagName="' + tagNames + '">';
+            imgTag += '<a class="thumbnail" href="javascript:void(0);" onClick="picTap(this);" data-photoId="' + photoId + '" data-pic="' + data.array[i].photoData + '" data-tagName="' + tagNames + '" page="' + currentPage + '">';
             imgTag += '<img src="' + imgSrc + '" alt="" />';
             imgTag += '</a></div>';
             tagArray.push(imgTag);
           }
           $("div#picList div.row").append(tagArray.join(''));
         }
-        $('#login').hide();
-        $('#picList').show();
-        $('#searchIcon').show();
-        $('#logoutIcon').show();
-        d.resolve();
+        if(localStorage.getItem("windowsHeight")){
+          $("body").scrollTop(localStorage.getItem("windowsHeight"));
+          if(currentPage == localStorage.getItem("page")){
+            localStorage.removeItem('windowsHeight');
+            localStorage.removeItem('page');
+            $('#login').hide();
+            $('#picList').show();
+            $('#searchIcon').show();
+            $('#logoutIcon').show();
+            if(localStorage.getItem("tags") != null && localStorage.getItem("tags").length > 0) {
+              $('#tagSelectName').show();
+            } else {
+              $('#tagSelectName').hide();
+            }
+            $("#loading").hide();
+          }
+          d.resolve();
+        }else{
+          $('#login').hide();
+          $('#picList').show();
+          $('#searchIcon').show();
+          $('#logoutIcon').show();
+          if(localStorage.getItem("tags") != null && localStorage.getItem("tags").length > 0) {
+            $('#tagSelectName').show();
+          } else {
+            $('#tagSelectName').hide();
+          }
+          d.resolve();
+        }
     } else {
       // 検索失敗時
       $("div.modal-body p").text(INDEX_002);
@@ -225,6 +265,9 @@ function picTap(e) {
   //TODO picture_binari以外も定数化したい
   localStorage.setItem('selectPic', e.getAttribute("data-photoId"));
   localStorage.setItem('tagNames', e.getAttribute("data-tagName"));
+  localStorage.setItem('page', e.getAttribute("page"));
+  var triggerNodePosition = $(e).offset().top;
+　localStorage.setItem('windowsHeight',triggerNodePosition);
   location.href="./page/picDetail.html";
 }
 
@@ -236,6 +279,7 @@ function logout() {
   $("#formInputPassword").val("");
   $('#searchIcon').hide();
   $('#logoutIcon').hide();
+  $('#tagSelectName').hide();
   $('#picList').hide();
   $('#login').show();
 }
@@ -249,6 +293,7 @@ $(function(){
   localStorage.removeItem('tagNames');
   $('#searchIcon').hide();
   $('#logoutIcon').hide();
+  $('#tagSelectName').hide();
   $('#picList').hide();
   $('#login').hide();
   loginCheck();
@@ -277,7 +322,7 @@ $(function(){
           }
         }
       }
-    });     
+    });
   } else {
     // 画面スクロール毎に判定を行う
     $(window).scroll(function(){
@@ -302,5 +347,3 @@ $(function(){
     });
   }
 });
-  
-  

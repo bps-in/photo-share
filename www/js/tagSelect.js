@@ -9,7 +9,7 @@ $(function() {
     return new Promise(function(resolve, reject){
       var tags = response['tag'].split(',');
       for(var index in tags) {
-        $('#tagGroup').append('<a class="list-group-item" href="#">' + tags[index] + '</a>');
+        $('#tagGroup').append('<a class="list-group-item btn btn-info" href="#">' + tags[index] + '</a>');
       }
     
       // タグリスト押下時処理
@@ -56,6 +56,7 @@ $(function() {
     // inputTags配列を文字列に変換して送信する
     var tags = inputTags.join(',');
     localStorage.setItem("tags",tags);
+    $("#serchTag").text(tags);
     location.href = "../index.html";
   }); 
 });

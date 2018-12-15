@@ -27,7 +27,19 @@
       background-position: center 100%;
     }
 　</style>
-　
+　 <script type="text/javascript">
+  // Android戻るボタン無効
+  ons.ready(function() {
+    ons.setDefaultDeviceBackButtonListener(function(event) {
+      ons.notification.confirm('アプリを終了しますか？<br/>Do you want to close the app?') 
+        .then(function(index) {
+          if (index === 1) { // OK が押された場合
+            navigator.app.exitApp(); // アプリを終了します。
+          }
+        });
+    });
+  });
+  </script>
 </head>
 <body>
   <div id="contents" class="tagRegistPage">
@@ -71,6 +83,17 @@
       <div class="row">
         <div class="col-sm-8">
           <div class="list-group" id="tagGroup">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="form-group">
+            <label for="comment">コメント</label>
+            <textarea rows="4" maxlength="1000" id="comment" class="form-control"></textarea>
           </div>
         </div>
       </div>

@@ -10,6 +10,8 @@ $(function(){
 　// 画像ID取得
 　if (localStorage.getItem('selectPic') != null) {
     photoId = localStorage.getItem('selectPic');
+    // コメント表示
+    $("#comment").val(localStorage.getItem('selectPicComment'));
 　}
   
   // ユーザーID取得
@@ -69,6 +71,8 @@ $(function(){
     }
     param.tag = JSON.stringify($("#tagInput").val().split(','));
     param.photoId = photoId; //新規の場合は空文字をAPIへ送る
+
+    param.comment = $("#comment").val();
     
     $.ajax({
       type: "POST",
@@ -229,7 +233,7 @@ function dispTagList(tagsStr) {
     if (tagsArr[index] === '') {
       continue;
     }
-    $('#tagGroup').append('<a class="list-group-item" data-tag-name="' 
+    $('#tagGroup').append('<a class="list-group-item btn btn-info" data-tag-name="' 
       + escapeHtml(tagsArr[index]) + '" href="javascript:void(0)">' + tagsArr[index] + '</a>');
   }
 

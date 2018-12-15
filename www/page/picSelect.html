@@ -19,6 +19,19 @@
   <script src="../common/js/selectedImgDataMng.js"></script>
   <script src="../js/constants.js"></script>
   <script src="../js/picSelect.js"></script>
+   <script type="text/javascript">
+  // Android戻るボタン無効
+  ons.ready(function() {
+    ons.setDefaultDeviceBackButtonListener(function(event) {
+      ons.notification.confirm('アプリを終了しますか？<br/>Do you want to close the app?') 
+        .then(function(index) {
+          if (index === 1) { // OK が押された場合
+            navigator.app.exitApp(); // アプリを終了します。
+          }
+        });
+    });
+  });
+  </script>
 </head>
 
 <body>
